@@ -18,5 +18,7 @@ public interface ContactosApi
  Call<Autorizacion2> Mensajeria(@Body EnviarMensajes mensaje);
 @POST("/users/registrarse")
  Call<AutorizacionRegistro> Registro(@Body Registro registro);
+@GET("/mensajes")
+Call<ResponseBody> getMensajes(@Header("Authorization") String authtoken);
 
 }

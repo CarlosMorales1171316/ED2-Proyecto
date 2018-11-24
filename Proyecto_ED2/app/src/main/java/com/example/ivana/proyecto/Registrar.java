@@ -63,7 +63,6 @@ public class Registrar extends AppCompatActivity {
         Correo = (EditText) findViewById(R.id.Registrar_Correo);
         Registro = (Button) findViewById(R.id.ValidarRegistro);
 
-
         Registro.setOnClickListener(
                 new View.OnClickListener()
         {
@@ -97,7 +96,7 @@ public class Registrar extends AppCompatActivity {
 
                 if(c1.length()>0 &&c2.length()>0&&n.length()>0&& contador ==2)
                 {
-                    Registro r = new Registro(c2,c1,n,correo);
+                    Registro r = new Registro(n,c1,c2,correo);
                     SendUsers(r);
                 }
                 if(c1.length()==0)

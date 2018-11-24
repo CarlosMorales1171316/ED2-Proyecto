@@ -17,9 +17,11 @@ import android.widget.Toast;
 
 import com.example.ivana.proyecto.AlgoritmoCompresion.ListAdapter2;
 import com.example.ivana.proyecto.AlgoritmoCompresion.Mensajes;
+import com.example.ivana.proyecto.AlgoritmoCompresion.Usuarios;
 import com.example.ivana.proyecto.AlgortimoCifrado.Cifrado;
 import com.example.ivana.proyecto.AlgortimoCifrado.Descifrado;
 import com.example.ivana.proyecto.CompresionArchivos.Huffman;
+import com.example.ivana.proyecto.api.ContactosApi;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +44,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class Chat_Usuario extends AppCompatActivity {
 
     EditText mensaje;
@@ -57,6 +65,15 @@ public class Chat_Usuario extends AppCompatActivity {
     int n =0;
     String tabla ="";
     String tabla2 ="";
+    IP ips = new IP();
+    String ip =ips.ip;
+
+
+    Retrofit.Builder builder = new Retrofit.Builder()
+            .baseUrl(ip).addConverterFactory(GsonConverterFactory.create());
+    Retrofit retrofit = builder.build();
+    ContactosApi api = retrofit.create(ContactosApi.class);
+
 
     @Override
 
@@ -68,7 +85,15 @@ public class Chat_Usuario extends AppCompatActivity {
         enviar = (Button) findViewById(R.id.btnEnviar);
         archivo =(Button) findViewById(R.id.btnEnviarArchivo);
         n=0;
-        new GetData().execute("http://192.168.1.13:7000/mensajes/");
+
+
+        Intent intent = new Intent(Chat_Usuario.this, Mensajeria.class);
+        Bundle extras = getIntent().getExtras();
+        String token = extras.getString("token");
+        String usuario = extras.getString("usuario");
+        String receptor = extras.getString("receptor");
+
+        RecibirMensajes(token,usuario,receptor);
 
         archivo.setOnClickListener(new View.OnClickListener()
         {
@@ -729,6 +754,96 @@ public class Chat_Usuario extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void RecibirMensajes(String token1, final String emisor, final String receptor)
+    {
+        Call<ResponseBody> call = api.getMensajes(token1);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response)
+            {
+                if(response.isSuccessful())
+                {
+                    Toast.makeText(Chat_Usuario.this, "Autorizacion exitosa!!!", Toast.LENGTH_SHORT).show();
+                    try {
+                        String cargar = response.body().string();
+
+                        Bundle extras = getIntent().getExtras();
+                        String usuarioEmisor = extras.getString("emisor");
+                        String usuarioReceptor = extras.getString("receptor");
+                        Descifrado descifrado =  new Descifrado();
+                        int grado =4;
+                        Validar validar = new Validar();
+                        ArrayList<String> json = validar.ReadJsonMensaje(cargar);
+
+                        ArrayList<Mensajes> ListaMensajes = new ArrayList<Mensajes>();
+                        try {
+                            for (int i = 0; i < json.size(); i++) {
+                                String[] v = json.get(i).split("=>");
+                                if (v[4].equals("mensaje")) {
+                                    String txt1 = v[0];
+                                    char[][] M1 = new char[grado][txt1.length()];
+                                    descifrado.CrearMatriz(txt1, grado, M1);
+                                    String emisor = descifrado.MensajeDecifrado(M1, grado, txt1.length());
+
+                                    String txt3 = v[2];
+                                    char[][] M3 = new char[grado][txt3.length()];
+                                    descifrado.CrearMatriz(txt3, grado, M3);
+                                    String receptor = descifrado.MensajeDecifrado(M3, grado, txt3.length());
+
+                                    String txt2 = v[1];
+                                    char[][] M2 = new char[grado][txt2.length()];
+                                    descifrado.CrearMatriz(txt2, grado, M2);
+                                    String mensaje = descifrado.MensajeDecifrado(M2, grado, txt2.length());
+
+                                    String d = emisor + " => " + receptor;
+
+                                    if (usuarioEmisor.equals(emisor) && usuarioReceptor.equals(receptor) || usuarioEmisor.equals(receptor) && usuarioReceptor.equals(emisor)) {
+
+                                        ListaMensajes.add(new Mensajes(d, mensaje, "   " + v[3]));
+                                    }
+                                }
+
+                                if (v[4].equals("archivo txt") || v[4].equals("archivo jpg")) {
+                                    if (v[5].length() > 2) {
+                                        if (v[4].endsWith("txt")) {
+                                            tabla2 = v[5];
+                                            Descomprimir(v[1], v[6]);
+
+                                        }
+                                    }
+                                    if (v[5].endsWith("jpg") || v[5].endsWith("png") || v[5].endsWith("JPG") || v[5].endsWith("PNG")) {
+
+                                        Descomprimir(v[1], v[6]);
+                                    }
+                                }
+
+                            }
+
+                            adapter = new ListAdapter2(getApplicationContext(), ListaMensajes);
+                            Lista.setAdapter(adapter);
+
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t)
+            {
+                Toast.makeText(Chat_Usuario.this,"Autorizacion fallida", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
 }
