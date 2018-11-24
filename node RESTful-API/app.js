@@ -1,3 +1,4 @@
+//importamos los modulos
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
@@ -7,6 +8,7 @@ const mongoose = require("mongoose");
 const mensajeRoutes = require("./api/routes/mensajes");
 const userRoutes = require("./api/routes/users");
 
+//ponemos la conexion de mongoose 
 mongoose.connect(
   "mongodb://ED2:" +
    process.env.MONGO_ATLAS_PW +
@@ -15,6 +17,8 @@ mongoose.connect(
     useMongoClient: true
   }
 );
+
+//para que mongoose use la libreria global promise
 mongoose.Promise = global.Promise;
 
 app.use(morgan("dev"));

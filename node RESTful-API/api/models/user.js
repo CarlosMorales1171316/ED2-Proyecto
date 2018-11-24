@@ -1,5 +1,7 @@
+//se requiere mongoose
 const mongoose = require('mongoose');
 
+//schema constructor
 const usersSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     Username: { type: String,required: true,unique: true},
@@ -10,4 +12,6 @@ const usersSchema = mongoose.Schema({
     },
 });
 
+//modelo de compilar de schema
+//mongoose creara una coleccion en la base de datos para el modelo "Users" usando el usersSchema
 module.exports = mongoose.model('Users', usersSchema);
