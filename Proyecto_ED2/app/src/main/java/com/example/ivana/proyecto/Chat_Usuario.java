@@ -107,13 +107,9 @@ public class Chat_Usuario extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                try {
+                try
+                {
                     performFileSearch();
-                    if(n==1)
-                    {
-                        new GetData().execute("http://192.168.1.13:7000/mensajes/");
-                    }
-
                 }
                 catch (Exception e)
                 {
@@ -139,7 +135,6 @@ public class Chat_Usuario extends AppCompatActivity {
                 String txt = emisor;
                 int grado = 4;
 
-
                 String m = mensaje.getText().toString();
                 String txt2 = m;
                 char[][] M2 = new char[grado][txt2.length()];
@@ -150,8 +145,6 @@ public class Chat_Usuario extends AppCompatActivity {
                 PostMensajes post = new PostMensajes(emisor,MensajeCifrado,receptor,fecha,"mensaje",".",".",token);
                 SendUsers(post);
                 RecibirMensajes(token);
-
-
             }
         });
 
@@ -191,6 +184,14 @@ public class Chat_Usuario extends AppCompatActivity {
                 }
 
                 ruta =path;
+                Intent intent = new Intent(Chat_Usuario.this, Mensajeria.class);
+                Bundle extras = getIntent().getExtras();
+                String token = extras.getString("token");
+                String receptor = extras.getString("receptor");
+                String emisor = extras.getString("emisor");
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Date date = new Date();
+                String fecha = ""+ (dateFormat.format(date));
 
                 if(path.endsWith("jpg")||path.endsWith("JPG")||path.endsWith("PNG")||path.endsWith("png")) {
                     String ruta = "/storage/emulated/0/" + path;
@@ -200,9 +201,11 @@ public class Chat_Usuario extends AppCompatActivity {
                     String name2 = path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
                     nombreArchivo = "/storage/emulated/0/Download/"+name2+"_ED2.jpg";
                     mensajeNuevo = "has recibo un archivo con el nombre de "+name2+"_ED2.jpg y se ubica en la carpeta de descargas!!";
-                    n=1;
-                    new PostData().execute("http://192.168.1.13:7000/mensajes/");
-
+                    PostMensajes post = new PostMensajes(emisor,compreso,receptor,fecha,"archivo jpg",".",nombreArchivo,token);
+                    PostMensajes post2 = new PostMensajes(emisor,    mensajeNuevo ,receptor,fecha,"mensaje",".",".",token);
+                    SendUsers(post);
+                    SendUsers(post2);
+                    RecibirMensajes(token);
                 }
                 if(path.endsWith("txt"))
                 {
@@ -220,8 +223,11 @@ public class Chat_Usuario extends AppCompatActivity {
                     String file = path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
                     nombreArchivo = "/storage/emulated/0/Download/"+file+"_ED2.txt";
                     mensajeNuevo = "has recibo el archivo "+file+".txt y se ha descargado en tu carpeta download";
-                        n=1;
-                    new PostData().execute("http://192.168.1.13:7000/mensajes/");
+                    PostMensajes post = new PostMensajes(emisor,compreso,receptor,fecha,"archivo txt",tabla,nombreArchivo,token);
+                    PostMensajes post2 = new PostMensajes(emisor,mensajenuevo,receptor,fecha,"mensaje",".",".",token);
+                    SendUsers(post);
+                    SendUsers(post2);
+                    RecibirMensajes(token);
                 }
 
             }
