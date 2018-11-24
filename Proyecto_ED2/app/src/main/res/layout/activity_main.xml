@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/fondoregistrar"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_bright"
+        android:hint="Inicio de Sesion"
+        android:textAlignment="center"
+        android:textSize="25dp" />
+    />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent" />
+
+    <EditText
+        android:id="@+id/Inicio_Nombre"
+        android:layout_width="match_parent"
+        android:layout_height="83dp"
+        android:background="@android:color/background_light"
+        android:drawableLeft="@drawable/ic_person_outline_black_24dp"
+        android:hint="Ingrese nombre de usuario"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@android:color/transparent" />
+
+    <EditText
+        android:id="@+id/Inicio_Contraseña"
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:ems="10"
+        android:hint="Ingrese contraseña"
+        android:background="@android:color/background_light"
+        android:inputType="textPassword"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:drawableLeft="@drawable/ic_vpn_key_black_24dp"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@android:color/transparent" />
+    <Button
+        android:id="@+id/Iniciar_Sesion"
+        android:layout_width="match_parent"
+        android:text="Iniciar Sesion"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textSize="30dp"
+        android:layout_height="70dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@android:color/transparent" />
+    <Button
+        android:id="@+id/Inicio_Registro"
+        android:layout_width="match_parent"
+        android:text="Registrarse"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textSize="30dp"
+        android:layout_height="70dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@android:color/transparent" />
+
+    <TextView
+        android:id="@+id/Inicio_Validacion"
+        android:layout_width="match_parent"
+        android:layout_height="121dp"
+        android:background="?android:attr/textColorLink"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20dp" />
+
+</LinearLayout>

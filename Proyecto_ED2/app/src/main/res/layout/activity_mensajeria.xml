@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fondoapp"
+    android:clipToPadding="false"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context=".Mensajeria">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_bright"
+        android:text=" Nombre Destinatario"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_dark"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@android:color/transparent"
+        />
+
+
+    <EditText
+        android:id="@+id/txtNombre"
+        android:layout_width="match_parent"
+        android:layout_height="82dp"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:hint="Ingrese nombre de destinarario"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:background="@android:color/background_light"
+        android:drawableLeft="@drawable/ic_mood_black_24dp"
+        />
+
+    <Button
+        android:id="@+id/btnIniciar"
+        android:layout_width="match_parent"
+        android:layout_height="79dp"
+        android:text="Ir a chat"
+        android:textSize="30dp"
+        android:drawableLeft="@drawable/ic_email_black_24dp"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@android:color/transparent"
+        />
+
+
+    <TextView
+        android:id="@+id/Inicio_Validacion2"
+        android:layout_width="match_parent"
+        android:layout_height="153dp"
+        android:background="#00ffb2"
+        android:textSize="30dp" />
+
+
+</LinearLayout>
+

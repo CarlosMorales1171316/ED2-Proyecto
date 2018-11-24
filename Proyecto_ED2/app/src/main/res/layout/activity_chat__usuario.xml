@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".Chat_Usuario">
+
+
+
+    <ListView
+        android:id="@+id/mensajeListView"
+        android:layout_width="match_parent"
+        android:layout_weight="2"
+        android:divider="#fff"
+        android:layout_height="wrap_content"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <EditText
+            android:id="@+id/mensajeEditText"
+            android:paddingHorizontal="10dp"
+            android:inputType="text"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_weight="2"
+            android:ems="10"
+            android:textStyle="bold"
+            android:hint="Escribe tu mensaje"
+             />
+
+        <Button
+            android:id="@+id/btnEnviar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:text="enviar mensaje || Actualizar"
+            android:textSize="9dp" />
+
+        <Button
+            android:id="@+id/btnEnviarArchivo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:text="Enviar archivo"
+            android:textSize="10dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
