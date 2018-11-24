@@ -21,4 +21,7 @@ public interface ContactosApi
 @GET("/mensajes")
 Call<ResponseBody> getMensajes(@Header("Authorization") String authtoken);
 
+@POST("/mensajes")
+ Call<AutorizacionPostMensajes> EnviarMensaje(@Body PostMensajes postMensajes);
+
 }

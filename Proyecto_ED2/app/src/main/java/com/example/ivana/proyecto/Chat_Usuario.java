@@ -21,7 +21,11 @@ import com.example.ivana.proyecto.AlgoritmoCompresion.Usuarios;
 import com.example.ivana.proyecto.AlgortimoCifrado.Cifrado;
 import com.example.ivana.proyecto.AlgortimoCifrado.Descifrado;
 import com.example.ivana.proyecto.CompresionArchivos.Huffman;
+import com.example.ivana.proyecto.api.AutorizacionPostMensajes;
+import com.example.ivana.proyecto.api.AutorizacionRegistro;
 import com.example.ivana.proyecto.api.ContactosApi;
+import com.example.ivana.proyecto.api.PostMensajes;
+import com.example.ivana.proyecto.api.Registro;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,6 +51,7 @@ import java.util.Date;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -75,6 +80,8 @@ public class Chat_Usuario extends AppCompatActivity {
     ContactosApi api = retrofit.create(ContactosApi.class);
 
 
+
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,15 +92,15 @@ public class Chat_Usuario extends AppCompatActivity {
         enviar = (Button) findViewById(R.id.btnEnviar);
         archivo =(Button) findViewById(R.id.btnEnviarArchivo);
         n=0;
-
-
         Intent intent = new Intent(Chat_Usuario.this, Mensajeria.class);
         Bundle extras = getIntent().getExtras();
         String token = extras.getString("token");
-        String usuario = extras.getString("usuario");
+        String emisor = extras.getString("emisor");
         String receptor = extras.getString("receptor");
 
-        RecibirMensajes(token,usuario,receptor);
+
+
+        RecibirMensajes(token);
 
         archivo.setOnClickListener(new View.OnClickListener()
         {
@@ -122,8 +129,28 @@ public class Chat_Usuario extends AppCompatActivity {
             public void onClick(View v)
             {
                 n=0;
-                new PostData().execute("http://192.168.1.13:7000/mensajes/");
-                new GetData().execute("http://192.168.1.13:7000/mensajes/");
+                Intent intent = new Intent(Chat_Usuario.this, Mensajeria.class);
+                Bundle extras = getIntent().getExtras();
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Date date = new Date();
+                String fecha = ""+ (dateFormat.format(date));
+                Cifrado cifrar = new Cifrado();
+                String emisor = extras.getString("emisor");
+                String txt = emisor;
+                int grado = 4;
+
+
+                String m = mensaje.getText().toString();
+                String txt2 = m;
+                char[][] M2 = new char[grado][txt2.length()];
+                cifrar.CrearMatriz(txt2, grado, M2);
+                String MensajeCifrado = cifrar.CifrarMensaje(M2, grado, txt2.length());
+                String receptor = extras.getString("receptor");
+                String token = extras.getString("token");
+                PostMensajes post = new PostMensajes(emisor,MensajeCifrado,receptor,fecha,"mensaje",".",".",token);
+                SendUsers(post);
+                RecibirMensajes(token);
+
 
             }
         });
@@ -756,7 +783,7 @@ public class Chat_Usuario extends AppCompatActivity {
         }
     }
 
-    public void RecibirMensajes(String token1, final String emisor, final String receptor)
+    public void RecibirMensajes(String token1)
     {
         Call<ResponseBody> call = api.getMensajes(token1);
         call.enqueue(new Callback<ResponseBody>() {
@@ -765,10 +792,9 @@ public class Chat_Usuario extends AppCompatActivity {
             {
                 if(response.isSuccessful())
                 {
-                    Toast.makeText(Chat_Usuario.this, "Autorizacion exitosa!!!", Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(Chat_Usuario.this, "Autorizacion exitosa!!!", Toast.LENGTH_SHORT).show();
                     try {
                         String cargar = response.body().string();
-
                         Bundle extras = getIntent().getExtras();
                         String usuarioEmisor = extras.getString("emisor");
                         String usuarioReceptor = extras.getString("receptor");
@@ -782,15 +808,11 @@ public class Chat_Usuario extends AppCompatActivity {
                             for (int i = 0; i < json.size(); i++) {
                                 String[] v = json.get(i).split("=>");
                                 if (v[4].equals("mensaje")) {
-                                    String txt1 = v[0];
-                                    char[][] M1 = new char[grado][txt1.length()];
-                                    descifrado.CrearMatriz(txt1, grado, M1);
-                                    String emisor = descifrado.MensajeDecifrado(M1, grado, txt1.length());
 
-                                    String txt3 = v[2];
-                                    char[][] M3 = new char[grado][txt3.length()];
-                                    descifrado.CrearMatriz(txt3, grado, M3);
-                                    String receptor = descifrado.MensajeDecifrado(M3, grado, txt3.length());
+                                    String emisor = v[0];
+
+
+                                    String receptor = v[2];
 
                                     String txt2 = v[1];
                                     char[][] M2 = new char[grado][txt2.length()];
@@ -845,5 +867,24 @@ public class Chat_Usuario extends AppCompatActivity {
         });
 
     }
+
+    private void SendUsers(PostMensajes post)
+    {
+        Call<AutorizacionPostMensajes> call = api.EnviarMensaje(post);
+        call.enqueue(new Callback<AutorizacionPostMensajes>() {
+            @Override
+            public void onResponse(Call<AutorizacionPostMensajes> call, Response<AutorizacionPostMensajes> response)
+            {
+                    Toast.makeText(Chat_Usuario.this, "", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<AutorizacionPostMensajes> call, Throwable t)
+            {
+                Toast.makeText(Chat_Usuario.this,"Autentifacion fallida",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
 }
