@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const jwt = require('jsonwebtoken');
 const verificarAutenticacion = require('../middleware/verificar_autorizacion');
+const verificarAuthorization = require('../middleware/verificar_authorization');
 
 const Mensaje = require("../models/mensaje")
 
@@ -56,7 +57,7 @@ router.get("/", verificarAutenticacion, (req, res, next) => {
 
 
 //metodo post que ingresa mensajes
-router.post("/", verificarAutenticacion, (req, res, next) => {
+router.post("/", verificarAuthorization, (req, res, next) => {
   const mensaje = new Mensaje({
     _id: new mongoose.Types.ObjectId(),
     Emisor: req.body.Emisor,
